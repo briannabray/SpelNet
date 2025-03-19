@@ -19,17 +19,17 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Registration endpoint using Supabase Auth
 app.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, username, school, year, housing_location } = req.body;
     console.log(`Received registration request for email: ${email}`);
 
-    // Email validation
+    // Email validation (ensure only Spelman and Morehouse emails are allowed)
     const emailPattern = /@(spelman\.edu|morehouse\.edu)$/;
     if (!emailPattern.test(email)) {
         return res.status(400).json({ success: false, message: 'Email must end with @spelman.edu or @morehouse.edu.' });
     }
 
     try {
-        // Register user in Supabase Auth
+        // Step 1: Register user in Supabase Auth
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -37,6 +37,21 @@ app.post('/register', async (req, res) => {
         });
 
         if (error) throw error;
+
+        const user = data.user; // Get the created user
+
+        // Step 2: Store user profile in `profile` table
+        const { error: profileError } = await supabase.from("profile").insert([
+            {
+                id: user.id, // Use auth user ID
+                username,
+                school,
+                year,
+                housing_location,
+            },
+        ]);
+
+        if (profileError) throw profileError;
 
         res.json({ success: true, message: 'Registration successful. Check your email for verification.' });
     } catch (error) {
@@ -58,6 +73,37 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+});
+
+// ✅ Get user profile by ID
+app.get('/profile/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const { data, error } = await supabase.from("profile").select("*").eq("id", id).single();
+
+        if (error) throw error;
+
+        res.json({ success: true, profile: data });
+    } catch (error) {
+        res.status(404).json({ success: false, message: "Profile not found" });
+    }
+});
+
+// ✅ Update user profile
+app.put('/profile/:id', async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    try {
+        const { error } = await supabase.from("profile").update(updates).eq("id", id);
+
+        if (error) throw error;
+
+        res.json({ success: true, message: "Profile updated successfully!" });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
     }
 });
 
@@ -95,3 +141,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+

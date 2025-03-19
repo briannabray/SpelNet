@@ -22,26 +22,23 @@ body {
     width: 350px;
 }
 
-h1 {
-    font-size: 24px;
+h1, h2, h3 {
     font-weight: 600;
     color: #ff4d94; /* Bright pink */
+}
+
+h1 {
+    font-size: 24px;
     margin-bottom: 20px;
 }
 
-/* ADDED: h2 heading style for "Verify Your Email" and dashboard headings */
 h2 {
     font-size: 20px;
-    font-weight: 600;
-    color: #ff4d94; /* Bright pink */
     margin-bottom: 15px;
 }
 
-/* ADDED: h3 heading style for "Hello, [name]!" in dashboard */
 h3 {
     font-size: 18px;
-    font-weight: 600;
-    color: #ff4d94; /* Bright pink */
     margin-bottom: 10px;
 }
 
@@ -106,32 +103,27 @@ button:hover {
     margin-top: 15px;
 }
 
-/* ADDED: Generic message class for status messages */
 .message {
     font-weight: bold;
     margin-top: 15px;
 }
 
-/* ADDED: Dashboard Styles Section - Begin */
-/* Dashboard container */
+/* Dashboard Styling */
 .dashboard {
     text-align: center;
 }
 
-/* User greeting section with bottom border */
 .user-greeting {
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 2px solid #ff99c8;
 }
 
-/* Styling for the email display in user greeting */
 .user-greeting p {
     color: #5a1a5b;
     font-size: 14px;
 }
 
-/* Main content area of dashboard */
 .dashboard-content {
     min-height: 60px;
     margin-bottom: 20px;
@@ -139,13 +131,10 @@ button:hover {
     color: #5a1a5b;
 }
 
-/* Special styling for logout button - red gradient */
 .logout-btn {
     background: linear-gradient(135deg, #ff4444, #cc0000);
 }
 
-/* Hover effect for logout button */
 .logout-btn:hover {
     background: linear-gradient(135deg, #cc0000, #ff4444);
 }
-/* ADDED: Dashboard Styles Section - End */

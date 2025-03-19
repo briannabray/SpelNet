@@ -1,0 +1,148 @@
+/* Housing Feed Styles */
+
+/* Container for the housing feed */
+.housing-feed {
+    background-color: #ffe6f2; /* Soft pink background for the feed */
+    padding: 20px;
+    border-radius: 15px;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 800px; /* Ensures the feed doesn't stretch too wide on large screens */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Feed Title */
+.housing-feed h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #ff4d94; /* Bright pink color for the title */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Post container */
+.feed-post {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Post title */
+.feed-post h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ff4d94;
+    margin-bottom: 10px;
+}
+
+/* Post content */
+.feed-post p {
+    font-size: 14px;
+    color: #5a1a5b;
+    margin-bottom: 10px;
+}
+
+/* Post footer (e.g., timestamp, user) */
+.feed-post-footer {
+    font-size: 12px;
+    color: #a8a8a8; /* Lighter color for the timestamp */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Button for creating a new post */
+.new-post-btn {
+    background: linear-gradient(135deg, #ff66b2, #ff3385);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.new-post-btn:hover {
+    background: linear-gradient(135deg, #ff3385, #ff66b2);
+    transform: scale(1.05);
+}
+
+/* Comment input field */
+.comment-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ff99c8;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+/* Comment button */
+.comment-btn {
+    background: linear-gradient(135deg, #ff66b2, #ff3385);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.comment-btn:hover {
+    background: linear-gradient(135deg, #ff3385, #ff66b2);
+    transform: scale(1.05);
+}
+
+/* Styling for comments section */
+.comments-section {
+    margin-top: 20px;
+}
+
+/* Individual comment styling */
+.comment {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment p {
+    font-size: 14px;
+    color: #5a1a5b;
+    margin-bottom: 5px;
+}
+
+.comment-footer {
+    font-size: 12px;
+    color: #a8a8a8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Add styles for the "Like" or "Comment" buttons */
+.like-btn, .reply-btn {
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.like-btn:hover, .reply-btn:hover {
+    background-color: #ff3385;
+    transform: scale(1.05);
+}

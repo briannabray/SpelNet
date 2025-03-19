@@ -1,75 +1,61 @@
+// App.js
+
 import React, { useState } from 'react';
-import axios from 'axios';
-import Dashboard from './Dashboard';
-import './App.css';
+import axios from 'axios'; // Import axios for making API requests
+import Dashboard from './Dashboard'; // Import Dashboard component for logged-in users
+import HousingFeed from './HousingFeed';    
+import './App.css'; // Import the CSS file for styling
 
 function App() {
     // ==========================================
     // STATE MANAGEMENT
     // ==========================================
     
-    // Original input state variables
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    // NEW: Added password state for authentication
-    const [password, setPassword] = useState('');
-    const [verificationCode, setVerificationCode] = useState('');
-    
-    // Original application flow state
-    const [message, setMessage] = useState('');
-    const [isEmailSent, setIsEmailSent] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
-    
-    // NEW: Added authentication mode state to toggle between register and login
-    // This controls which form is displayed to the user
-    const [authMode, setAuthMode] = useState('register'); // Options: 'register' or 'login'
-    
+    // State variables for user details
+    const [name, setName] = useState(''); // Stores the user's name
+    const [email, setEmail] = useState(''); // Stores the user's email
+    const [password, setPassword] = useState(''); // Stores the user's password
+    const [verificationCode, setVerificationCode] = useState(''); // Stores the verification code
+
+    // State variables for managing messages and UI flow
+    const [message, setMessage] = useState(''); // Stores messages to show to the user (e.g., errors)
+    const [isEmailSent, setIsEmailSent] = useState(false); // Checks if the email for verification was sent
+    const [isVerified, setIsVerified] = useState(false); // Tracks whether the user is verified
+    const [authMode, setAuthMode] = useState('register'); // Manages which form to show (register or login)
+
     // ==========================================
     // EVENT HANDLERS
     // ==========================================
     
-    // NEW: Renamed from handleSubmit to handleRegister
-    // Now specifically handles the registration form submission
+    // Handles user registration form submission
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        // Email validation remains the same
-        const emailPattern = /@(spelman\.edu|morehouse\.edu)$/;
+        const emailPattern = /@(spelman\.edu|morehouse\.edu)$/; // Validate email domain
         if (!emailPattern.test(email)) {
             setMessage('Email must end with @spelman.edu or @morehouse.edu.');
             return;
         }
 
         try {
-            // MODIFIED: Changed endpoint from /submit to /register
-            // NEW: Now sending password along with name and email
             const response = await axios.post('/register', { name, email, password });
-            console.log("Registration API response:", response);
-            // Added fallback message in case response doesn't include a message
             setMessage(response.data.message || 'Verification code sent to your email!');
-            setIsEmailSent(true); // Show verification step
+            setIsEmailSent(true); // Show verification step after registration
         } catch (error) {
-            // IMPROVED: More detailed error message with fallback
             setMessage('Error during registration: ' + (error.response?.data?.message || error.message));
         }
     };
 
-    // NEW: Added function to handle login form submission
-    // This is completely new functionality for returning users
+    // Handles user login form submission
     const handleLogin = async (e) => {
         e.preventDefault();
         
         try {
-            // Makes API call to login endpoint with email and password
             const response = await axios.post('/login', { email, password });
-            console.log("Login API response:", response);
-            
             if (response.data.success) {
-                // NEW: Store user name from response if available
-                setName(response.data.name || 'User'); // Use name from response or default to 'User'
+                setName(response.data.name || 'User'); // Store the name from the response
                 setMessage('Login successful!');
-                // Skip verification for login and go straight to dashboard
-                setIsVerified(true); 
+                setIsVerified(true); // Skip verification for login and go straight to dashboard
             } else {
                 setMessage(response.data.message || 'Login failed. Please check your credentials.');
             }
@@ -78,46 +64,30 @@ function App() {
         }
     };
 
-    // Verify email function remains largely unchanged
+    // Handles email verification step after registration
     const handleVerifyEmail = async () => {
         try {
             const response = await axios.post('/verify', { email, verificationCode });
-            // IMPROVED: Added fallback message
             setMessage(response.data.message || 'Email verified successfully!');
-            
             if (response.data.success) {
-                setIsVerified(true); // Show dashboard
+                setIsVerified(true); // Set user as verified and show dashboard
             }
         } catch (error) {
             setMessage('Invalid verification code.');
         }
     };
 
-    // MODIFIED: Logout handler now resets password state too
-    const handleLogout = () => {
-        // Reset all states except authMode (keeps the same tab active)
-        setName('');
-        setEmail('');
-        setPassword(''); // NEW: Clear password on logout
-        setMessage('');
-        setVerificationCode('');
-        setIsEmailSent(false);
-        setIsVerified(false);
-    };
-
-    // NEW: Function to toggle between register and login modes
-    // This changes which form is displayed without changing page
+    // Toggles between login and registration forms
     const toggleAuthMode = () => {
         setAuthMode(authMode === 'register' ? 'login' : 'register');
-        setMessage(''); // Clear any messages when switching modes
+        setMessage(''); // Clear any error/success messages when switching modes
     };
 
     // ==========================================
-    // COMPONENT RENDERING FUNCTIONS
+    // RENDER FUNCTIONS (Forms)
     // ==========================================
     
-    // NEW: Separate function to render login form
-    // Keeps the JSX organized and easier to maintain
+    // Renders the login form
     const renderLoginForm = () => (
         <form onSubmit={handleLogin}>
             <div>
@@ -142,8 +112,7 @@ function App() {
         </form>
     );
 
-    // NEW: Separate function to render registration form
-    // Similar to original form but adds password field
+    // Renders the registration form
     const renderRegistrationForm = () => (
         <form onSubmit={handleRegister}>
             <div>
@@ -177,8 +146,7 @@ function App() {
         </form>
     );
 
-    // NEW: Separate function for verification form 
-    // Extracted from original code for better organization
+    // Renders the email verification form
     const renderVerificationForm = () => (
         <div>
             <h2>Verify Your Email</h2>
@@ -196,51 +164,42 @@ function App() {
     // ==========================================
     // MAIN RENDER FUNCTION
     // ==========================================
+    
     return (
         <div className="App">
-            {/* MODIFIED: Conditional rendering now includes more logic */}
+            {/* Conditional rendering: show forms or dashboard */}
             {!isVerified ? (
                 <>
-                    {/* CHANGED: Heading from "Enter Your Info" to "Welcome" */}
                     <h1>Welcome</h1>
-                    
-                    {/* Conditional rendering: Show verification form or auth forms */}
-                    {isEmailSent ? (
-                        renderVerificationForm()
-                    ) : (
+                    {isEmailSent ? renderVerificationForm() : (
                         <>
-                            {/* NEW: Tab navigation for switching between register and login */}
                             <div className="auth-tabs">
-                                <button 
-                                    className={`tab-btn ${authMode === 'register' ? 'active' : ''}`}
+                                <button
+                                    className={authMode === 'register' ? 'active' : ''}
                                     onClick={() => setAuthMode('register')}
                                 >
                                     Register
                                 </button>
-                                <button 
-                                    className={`tab-btn ${authMode === 'login' ? 'active' : ''}`}
+                                <button
+                                    className={authMode === 'login' ? 'active' : ''}
                                     onClick={() => setAuthMode('login')}
                                 >
                                     Login
                                 </button>
                             </div>
-                            
-                            {/* NEW: Conditionally render either registration or login form */}
                             {authMode === 'register' ? renderRegistrationForm() : renderLoginForm()}
                         </>
                     )}
                 </>
             ) : (
-                /* Dashboard component remains the same */
-                <Dashboard 
-                    name={name} 
-                    email={email} 
-                    onLogout={handleLogout} 
+                <Dashboard
+                    name={name}
+                    email={email}
+                    onLogout={() => setIsVerified(false)} // Logout function
                 />
             )}
-            
-            {/* Message display remains the same */}
-            {message && <p className="message">{message}</p>}
+            {/* Display any messages like success, error, etc. */}
+            {message && <p>{message}</p>}
         </div>
     );
 }
